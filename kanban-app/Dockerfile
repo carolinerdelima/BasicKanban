@@ -1,6 +1,6 @@
 FROM php:8.2-fpm-alpine3.18
 
-# Instala dependências básicas e de extensão
+# Instala dependências básicas e extensões PHP
 RUN apk add --no-cache \
     bash \
     git \
@@ -22,4 +22,10 @@ RUN apk add --no-cache \
 # Instala Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+# Define diretório de trabalho
 WORKDIR /var/www
+
+# Corrige permissões para storage e bootstrap/cache
+RUN mkdir -p storage bootstrap/cache \
+    && chown -R www-data:www-data storage bootstrap/cache \
+    && chmod -R 775 storage bootstrap/cache

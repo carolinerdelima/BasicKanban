@@ -50,3 +50,47 @@ Requisitos:
 ```bash
 git clone https://github.com/carolinerdelima/BasicKanban.git
 cd kanban-app
+```
+
+### 2. Copie o arquivo .env
+```bash
+cp .env.example .env
+```
+
+### 3. Suba os containers
+```bash
+docker-compose up -d --build
+```
+
+### 4. Instale as dependências PHP (dentro do container app)
+```bash
+docker exec -it kanban-app bash
+composer install
+```
+
+### 5. Geração da chave de criptografia (APP_KEY)
+```bash
+php artisan key:generate
+```
+
+### 6. Rodar as migrations
+Entre no container:
+
+```bash
+docker exec -it kanban-app bash
+
+```
+
+E após estar dentro do container:
+
+```bash
+php artisan migrate
+```
+
+### 7. Corrigindo as permissões no host (na máquina local)
+```bash
+sudo chown -R $USER:www-data storage bootstrap/cache
+sudo chmod -R 775 storage bootstrap/cache
+sudo chown -R $USER:www-data storage/logs
+sudo chmod -R 775 storage/logs
+```
