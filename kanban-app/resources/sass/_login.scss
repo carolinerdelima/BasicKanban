@@ -1,0 +1,70 @@
+body {
+    background-color: $dark-gray;
+    color: $white;
+    font-family: $font-family;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.page-title {
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    img {
+        height: 50px;
+        margin-right: 10px;
+    }
+}
+
+.login-card {
+    background-color: $primary-blue;
+    padding: 2rem;
+    border-radius: $border-radius;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+    max-width: 400px;
+    margin: 0 auto;
+    text-align: center;
+    transition: all 0.3s ease;
+
+    &:hover {
+        box-shadow: 0 0 30px rgba(255, 255, 255, 0.6);
+        transform: translateY(-5px);
+    }
+
+    input {
+        border-radius: 0.5rem;
+        margin-bottom: 1rem;
+        background-color: white;
+        color: black;
+    }
+
+    button {
+        background-color: $white;
+        color: $primary-blue;
+        font-weight: bold;
+        border-radius: 2rem;
+        transition: 0.3s;
+
+        &:hover {
+            background-color: darken($primary-blue, 10%);
+            color: $white;
+        }
+    }
+}
+
+h2 {
+    color: $white;
+    margin-bottom: 1.5rem;
+}
+
+label {
+    float: left;
+    margin-bottom: 0.5rem;
+}

@@ -25,7 +25,11 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Define diretório de trabalho
 WORKDIR /var/www
 
-# Corrige permissões para storage e bootstrap/cache
-RUN mkdir -p storage bootstrap/cache \
+# Corrige permissões para pastas sensíveis do Laravel (storage e bootstrap/cache)
+RUN mkdir -p storage/framework/cache \
+    storage/framework/sessions \
+    storage/framework/views \
+    storage/logs \
+    bootstrap/cache \
     && chown -R www-data:www-data storage bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache
