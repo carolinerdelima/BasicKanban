@@ -9,3 +9,5 @@ window.jQuery = $;
 
 // Importa lógicas específicas
 import './login';
+import './boards/index';
+import './boards/show';

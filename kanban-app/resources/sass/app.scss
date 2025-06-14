@@ -6,3 +6,7 @@
 
 // Importa Bootstrap (via NPM)
 @import 'bootstrap/scss/bootstrap';
+
+// Importa estilos da tela de boards e tasks
+@import 'boards';
+@import 'kanban';

@@ -1,40 +1,14 @@
 @extends('layouts.app')
 
 @section('content')
-<h2>Meus Boards</h2>
 
-<ul id="boardsList" class="list-group"></ul>
+<div class="page-title">
+    <img src="{{ asset('images/kanban-icon.png') }}" alt="Kanban Icon">
+    Kanban App
+</div>
 
-<script>
-$(document).ready(function() {
-    // Adiciona o token de autenticação em todas as requisições AJAX
-    $.ajaxSetup({
-        headers: {
-            'Authorization': 'Bearer ' + localStorage.getItem('token')
-        }
-    });
+<h2 class="boards-title">Meus Boards</h2>
 
-    // Pra listar boards do usuário
-    $.get('/api/boards', function(boards) {
-        $('#boardsList').empty();
+<div id="boardsList" class="boards-container"></div>
 
-        boards.forEach(function(board) {
-            $('#boardsList').append(`
-                <li class="list-group-item">
-                    <a href="/boards/${board.id}" class="text-decoration-none">
-                        ${board.name}
-                    </a>
-                </li>
-            `);
-        });
-    }).fail(function(xhr) {
-        alert('Erro ao carregar boards: ' + xhr.responseJSON.message);
-
-        // Se não estiver logado, redireciona para o login
-        if (xhr.status === 401) {
-            window.location.href = '/login';
-        }
-    });
-});
-</script>
 @endsection
