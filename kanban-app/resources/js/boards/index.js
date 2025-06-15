@@ -1,14 +1,10 @@
 import $ from 'jquery';
 import { loadUserName, setupLogoutButton } from '../helpers/userInfo';
 
-$(document).ready(function() {
-
-    $(document).on('click', '.board-item', function() {
-        const boardId = $(this).data('id');
-        window.location.href = `/boards/${boardId}`;
-    });
-
-    if (!window.location.pathname.startsWith('/boards')) return;
+$(document).ready(() => {
+    if (!window.location.pathname.startsWith('/boards')) {
+        return;
+    }
 
     loadUserName();
     setupLogoutButton();
@@ -19,52 +15,46 @@ $(document).ready(function() {
         }
     });
 
-    $.get('/api/boards', function(boards) {
-        $('#boardsList').empty();
+    $.get('/api/boards')
+        .done(boards => {
+            const $list = $('#boardsList').empty();
 
-        boards.forEach(function(board) {
-            if (board.id && board.name) {
-                $('#boardsList').append(`
-                    <div class="board-item">
-                        <a href="/boards/${board.id}">${board.name}</a>
+            boards.forEach(board => {
+                $list.append(`
+                    <div class="board-item" data-id="${board.id}">
+                        ${board.name}
                     </div>
                 `);
-            }
+            });
+        })
+        .fail(xhr => {
+            alert('Erro ao carregar boards: '
+                + (xhr?.responseJSON?.message || 'Erro desconhecido'));
+
+            if (xhr.status === 401) window.location.href = '/login';
         });
-    }).fail(function(xhr) {
-        alert('Erro ao carregar boards: ' + (xhr.responseJSON?.message || 'Erro desconhecido'));
-        if (xhr.status === 401) {
-            window.location.href = '/login';
-        }
-    });
 
-    $(document).on('click', '.board-item', function() {
+    $(document).on('click', '.board-item', function () {
         const boardId = $(this).data('id');
-        window.location.href = `/boards/${boardId}`;
+        if (boardId) window.location.href = `/boards/${boardId}`;
     });
 
-    // Modal de criação de board
-    $('#createBoardButton').click(() => $('#boardModalOverlay').fadeIn());
-    $('#closeBoardModal').click(() => $('#boardModalOverlay').fadeOut());
+    $('#createBoardButton').on('click', () => $('#boardModalOverlay').fadeIn());
+    $('#closeBoardModal').on('click', () => $('#boardModalOverlay').fadeOut());
 
-    $('#saveBoard').click(function() {
+    $('#saveBoard').on('click', () => {
         const boardName = $('#newBoardName').val().trim();
+
         if (!boardName) {
             alert('Informe um nome para o board');
             return;
         }
 
-        $.ajaxSetup({
-            headers: {
-                'Authorization': 'Bearer ' + localStorage.getItem('token')
-            }
-        });
-
-        $.post('/api/boards', { name: boardName }, function() {
-            $('#boardModalOverlay').fadeOut();
-            location.reload();
-        }).fail(function() {
-            alert('Erro ao criar board');
-        });
+        $.post('/api/boards', { name: boardName })
+            .done(() => {
+                $('#boardModalOverlay').fadeOut();
+                location.reload();               // recarrega lista
+            })
+            .fail(() => alert('Erro ao criar board'));
     });
 });

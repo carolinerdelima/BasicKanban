@@ -5,6 +5,66 @@
     font-size: 1.5rem;
 }
 
+#createBoardButton:hover,
+.create-board-button:hover {
+    background: #fff;
+    color: darken($primary-blue, 12%);
+}
+
+#boardModalOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+#boardModalContent {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 1rem;
+    text-align: center;
+    width: 320px;
+
+    h4   { color: #27262A; margin-bottom: 1rem; }
+
+    input {
+        width: 100%;
+        margin-bottom: 1rem;
+        padding: .5rem;
+        border-radius: .5rem;
+        border: 1px solid #ccc;
+        font-size: .9rem;
+    }
+
+    button {
+        border-radius: 2rem;
+        padding: .5rem 1rem;
+        font-weight: bold;
+    }
+}
+
+.main-content{
+    max-width: 680px;
+    margin: 0 auto;
+}
+
+.boards-wrapper {
+    max-height: 45vh;
+    overflow-y: auto;
+    padding-right: .1rem;
+}
+
+.boards-wrapper::-webkit-scrollbar {
+    width: 8px;
+}
+.boards-wrapper::-webkit-scrollbar-thumb {
+    background: $primary-blue;
+    border-radius: 4px;
+}
+
 .boards-container {
     display: flex;
     flex-direction: column;
@@ -13,69 +73,33 @@
     margin: 0 auto;
 }
 
-.board-item {
-    background-color: $primary-blue;
-    padding: 1rem 1.5rem;
-    border-radius: $border-radius;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
-    transition: all 0.3s ease;
-    cursor: pointer;
+.board-item{
+    width:100%;
+    background:$primary-blue;
+    padding:1rem 1.2rem;
+    border-radius:$border-radius;
+    box-shadow:0 4px 10px rgba(0,0,0,.4);
+    cursor:pointer;
+    transition:all .25s;
 
-    a {
-        color: $white;
-        font-weight: bold;
-        font-size: 1.2rem;
-        text-decoration: none;
-    }
+    color:$white;
+    font-weight:700;
+    text-decoration:none;
+    font-size:1.05rem;
 
-    &:hover {
-        background-color: darken($primary-blue, 10%);
-        transform: translateY(-5px);
-        box-shadow: 0 6px 14px rgba(33, 114, 184, 0.6);
-    }
+    &:hover{background:darken($primary-blue,9%);transform:translateY(-4px);}
 }
 
-#createBoardButton {
-    display: block;
-    margin: 2rem auto 1rem auto;
-    padding: 0.5rem 1.5rem;
-    font-weight: bold;
-    border-radius: 2rem;
-    border: 2px solid white;
-    color: white;
-    background-color: transparent;
-    transition: all 0.3s ease;
-}
+#createBoardButton{
+    display:inline-flex;align-items:center;justify-content:center;
+    gap:.4rem;
+    margin:1.5rem auto 0;
+    padding:.55rem 1.8rem;
+    font-weight:700;color:$white;
+    border:2px solid $white;border-radius:2rem;background:transparent;
+    transition:.25s;
 
-#createBoardButton:hover {
-    background-color: #ffffff;
-    color: darken($primary-blue, 10%);
-}
+    i{font-size:1rem;}
 
-#boardModalOverlay {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0,0,0,0.7);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-}
-
-#boardModalContent {
-    background: white;
-    padding: 2rem;
-    border-radius: 1rem;
-    text-align: center;
-    width: 300px;
-
-    input {
-        width: 100%;
-        margin-bottom: 1rem;
-        padding: 0.5rem;
-        border-radius: 0.5rem;
-        border: 1px solid #ccc;
-    }
+    &:hover{background:$white;color:$primary-blue;}
 }
