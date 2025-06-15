@@ -24,4 +24,17 @@
 
 <div id="boardsList" class="boards-container"></div>
 
+<button id="createBoardButton" class="btn btn-outline-light d-block mx-auto mb-3">
+    <span style="font-weight:bold; margin-right: 5px;">+</span> Criar Novo Board
+</button>
+
+<div id="boardModalOverlay" style="display:none;">
+    <div id="boardModalContent">
+        <h4>Criar Novo Board</h4>
+        <input type="text" id="newBoardName" placeholder="Nome do board">
+        <button id="saveBoard" class="btn btn-primary w-100 mt-2">Salvar</button>
+        <button id="closeBoardModal" class="btn btn-secondary w-100 mt-2">Cancelar</button>
+    </div>
+</div>
+
 @endsection

@@ -27,8 +27,8 @@
     transition: background-color 0.3s;
 
     &:hover {
-        background-color: #2172b8;
-        color: white;
+        background-color: #ffffff;
+        color: darken($primary-blue, 10%);
     }
 }
 

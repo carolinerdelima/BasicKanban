@@ -37,4 +37,34 @@ $(document).ready(function() {
             window.location.href = '/login';
         }
     });
+
+    $(document).on('click', '.board-item', function() {
+        const boardId = $(this).data('id');
+        window.location.href = `/boards/${boardId}`;
+    });
+
+    // Modal de criação de board
+    $('#createBoardButton').click(() => $('#boardModalOverlay').fadeIn());
+    $('#closeBoardModal').click(() => $('#boardModalOverlay').fadeOut());
+
+    $('#saveBoard').click(function() {
+        const boardName = $('#newBoardName').val().trim();
+        if (!boardName) {
+            alert('Informe um nome para o board');
+            return;
+        }
+
+        $.ajaxSetup({
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            }
+        });
+
+        $.post('/api/boards', { name: boardName }, function() {
+            $('#boardModalOverlay').fadeOut();
+            location.reload();
+        }).fail(function() {
+            alert('Erro ao criar board');
+        });
+    });
 });
