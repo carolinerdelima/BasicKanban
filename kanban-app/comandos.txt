@@ -1,8 +1,0 @@
-docker stop $(docker ps -a -q)
-
-
-file_put_contents(/var/www/storage/framework/views/187f828346b000af3c7029fb05171792.php): Failed to open stream: Permission denied
-
-
-caroline@caroline-Lenovo-ideapad-330S-15IKB:~/desafio/kanban-app$ sudo chmod 777 -R storage
-
