@@ -1,7 +1,11 @@
 import $ from 'jquery';
 import Sortable from 'sortablejs';
+import { loadUserName, setupLogoutButton } from '../helpers/userInfo';
 
 $(document).ready(() => {
+    loadUserName();
+    setupLogoutButton();
+
     const boardId = $('meta[name="board-id"]').attr('content');
     if (!boardId) return;
 
@@ -17,10 +21,11 @@ $(document).ready(() => {
             Sortable.create(this, {
                 group: 'kanban',
                 animation: 150,
-                filter: isDoneColumn ? '.kanban-task' : null,   // Bloqueia todos os itens dentro de Done
+                filter: isDoneColumn ? '.kanban-task' : null,
                 onMove: function (evt) {
-                    if (isDoneColumn) {
-                        return false; // Impede arrasto visual
+                    const fromIsDone = $(evt.from).closest('.kanban-column').hasClass('done');
+                    if (fromIsDone) {
+                        return false;
                     }
                 },
                 onEnd: handleDrop
@@ -28,12 +33,11 @@ $(document).ready(() => {
         });
     }
 
-    /** Enviado sempre que um card muda */
     function handleDrop(evt) {
-        const $item      = $(evt.item); // card arrastado
-        const taskId     = $item.data('id');
-        const newColumn  = $(evt.to).closest('.kanban-column').data('id');
-        const newIndex   = evt.newIndex + 1;
+        const $item    = $(evt.item);
+        const taskId   = $item.data('id');
+        const newColumn = $(evt.to).closest('.kanban-column').data('id');
+        const newIndex  = evt.newIndex + 1;
 
         $.ajax({
             url: `/api/tasks/${taskId}/move`,
@@ -42,10 +46,10 @@ $(document).ready(() => {
             data: JSON.stringify({ column_id: newColumn, position: newIndex })
         }).fail((xhr) => {
             alert('Falha ao mover a task: ' + (xhr.responseJSON?.message || 'erro'));
+            loadBoard();
         });
     }
 
-    // carrega e desenha o board
     function loadBoard() {
         $.get(`/api/boards/${boardId}/columns`, (columns) => {
             $('#kanbanBoard').empty();
@@ -76,7 +80,7 @@ $(document).ready(() => {
                 $('#kanbanBoard').append(columnHtml);
             });
 
-            initDragAndDrop(); // ativa SortableJS depois de renderizar
+            initDragAndDrop();
         });
     }
 
