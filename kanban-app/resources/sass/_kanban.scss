@@ -37,6 +37,16 @@
     font-size: 0.9rem;
 }
 
+.kanban-column.done {
+    background-color: #d1d1d1;
+}
+
+.kanban-column.done .kanban-task {
+    background-color: #f5f5f5;
+    color: #555;
+    border-left: 4px solid #999;
+}
+
 /* Card da task — texto truncado */
 .kanban-task {
     position: relative;

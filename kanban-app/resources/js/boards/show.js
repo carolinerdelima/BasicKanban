@@ -10,11 +10,19 @@ $(document).ready(() => {
     });
 
     function initDragAndDrop() {
-        // Para cada lista de tasks
         $('.kanban-tasks').each(function () {
+            const $column = $(this).closest('.kanban-column');
+            const isDoneColumn = $column.hasClass('done');
+
             Sortable.create(this, {
-                group: 'kanban', // permite arrastar entre colunas
+                group: 'kanban',
                 animation: 150,
+                filter: isDoneColumn ? '.kanban-task' : null,   // Bloqueia todos os itens dentro de Done
+                onMove: function (evt) {
+                    if (isDoneColumn) {
+                        return false; // Impede arrasto visual
+                    }
+                },
                 onEnd: handleDrop
             });
         });
@@ -43,8 +51,10 @@ $(document).ready(() => {
             $('#kanbanBoard').empty();
 
             columns.forEach((column) => {
+                const isDone = column.name.toLowerCase() === 'done';
+
                 let columnHtml = `
-                    <div class="kanban-column" data-id="${column.id}">
+                    <div class="kanban-column ${isDone ? 'done' : ''}" data-id="${column.id}">
                         <div class="kanban-column-header">${column.name}</div>
                         <div class="kanban-tasks">
                 `;

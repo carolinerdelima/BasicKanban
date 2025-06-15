@@ -57,8 +57,16 @@ class TaskService
      */
     public function moveTask(Task $task, Column $toColumn, int $newPosition, User $user): void
     {
-        $this->authorizeUserForBoard($user, $task->column->board->id);
+        $this->authorizeUserForBoard($user, $task->column->board_id);
         $this->authorizeUserForBoard($user, $toColumn->board_id);
+
+        // Se a task estiver em Done, só pode ficar lá
+        $doneColumnName = 'Done';
+        $fromColumn = $task->column;
+
+        if (strtolower($fromColumn->name) === strtolower($doneColumnName) && $toColumn->id !== $fromColumn->id) {
+            abort(403, 'Não é permitido mover tasks de Done para colunas anteriores.');
+        }
 
         $this->repo->move($task, $toColumn, $newPosition);
     }
