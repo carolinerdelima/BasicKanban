@@ -17,6 +17,7 @@
     },
     "dependencies": {
         "bootstrap": "5.3",
-        "jquery": "3.7"
+        "jquery": "3.7",
+        "sortablejs": "^1.15.6"
     }
 }

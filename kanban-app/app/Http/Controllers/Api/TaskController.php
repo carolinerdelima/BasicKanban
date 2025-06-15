@@ -2,23 +2,22 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
 use App\Models\Task;
 use App\Models\Column;
 use Illuminate\Http\Request;
+use App\Services\TaskService;
+use App\Http\Controllers\Controller;
 
 class TaskController extends Controller
 {
+    public function __construct(private TaskService $service) {}
+
     /**
      * Lista todas as tasks visíveis para o usuário (em boards onde ele é membro)
      */
     public function index(Request $request)
     {
-        $userBoardIds = $request->user()->boards()->pluck('boards.id');
-
-        return Task::whereHas('column.board', function ($query) use ($userBoardIds) {
-            $query->whereIn('boards.id', $userBoardIds);
-        })->with(['user', 'column'])->get();
+        return $this->service->getTasksVisibleForUser($request->user());
     }
 
     /**
@@ -26,7 +25,7 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'column_id' => 'required|exists:columns,id',
@@ -34,15 +33,7 @@ class TaskController extends Controller
             'position' => 'nullable|integer',
         ]);
 
-        $column = Column::findOrFail($request->column_id);
-        $user = $request->user();
-
-        // Verifica se o usuário é membro do board da coluna
-        if (!$user->boards()->where('boards.id', $column->board_id)->exists()) {
-            return response()->json(['message' => 'Acesso negado: você não faz parte deste board.'], 403);
-        }
-
-        $task = Task::create($request->only(['title', 'description', 'column_id', 'user_id', 'position']));
+        $task = $this->service->createTask($request->user(), $validated);
 
         return response()->json($task, 201);
     }
@@ -52,13 +43,7 @@ class TaskController extends Controller
      */
     public function update(Request $request, Task $task)
     {
-        $user = $request->user();
-
-        if (!$user->boards()->where('boards.id', $task->column->board_id)->exists()) {
-            return response()->json(['message' => 'Acesso negado: você não faz parte deste board.'], 403);
-        }
-
-        $request->validate([
+        $validated = $request->validate([
             'title' => 'sometimes|string|max:255',
             'description' => 'nullable|string',
             'column_id' => 'sometimes|exists:columns,id',
@@ -66,7 +51,7 @@ class TaskController extends Controller
             'position' => 'nullable|integer',
         ]);
 
-        $task->update($request->only(['title', 'description', 'column_id', 'user_id', 'position']));
+        $this->service->updateTask($task, $request->user(), $validated);
 
         return response()->json($task);
     }
@@ -76,14 +61,28 @@ class TaskController extends Controller
      */
     public function destroy(Request $request, Task $task)
     {
-        $user = $request->user();
-
-        if (!$user->boards()->where('boards.id', $task->column->board_id)->exists()) {
-            return response()->json(['message' => 'Acesso negado: você não faz parte deste board.'], 403);
-        }
-
-        $task->delete();
+        $this->service->deleteTask($task, $request->user());
 
         return response()->json(['message' => 'Tarefa excluída com sucesso']);
+    }
+
+    /**
+     * Move uma task de coluna
+     */
+    public function move(Request $request, Task $task)
+    {
+        $validated = $request->validate([
+            'column_id' => 'required|exists:columns,id',
+            'position'  => 'required|integer|min:1',
+        ]);
+
+        $this->service->moveTask(
+            $task,
+            Column::findOrFail($validated['column_id']),
+            $validated['position'],
+            $request->user()
+        );
+
+        return response()->json(['message' => 'Task movida com sucesso']);
     }
 }

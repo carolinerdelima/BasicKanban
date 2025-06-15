@@ -14,8 +14,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 
     Route::apiResource('boards', BoardController::class)->only(['index', 'store', 'show']);
-
     Route::get('/boards/{board}/columns', [ColumnController::class, 'index']);
 
     Route::apiResource('tasks', TaskController::class)->only(['index', 'store', 'update', 'destroy']);
+    Route::patch('/tasks/{task}/move', [TaskController::class, 'move']);
 });
