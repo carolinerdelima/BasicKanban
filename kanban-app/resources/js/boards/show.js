@@ -1,47 +1,52 @@
 import $ from 'jquery';
 
-$(document).ready(function() {
+$(document).ready(function () {
+    // Captura o ID do board
     const boardId = $('meta[name="board-id"]').attr('content');
+    if (!boardId) return; // Se não estiver na página correta, sai
 
-    // Só executa se estiver na página de show de board
-    if (!boardId) return;
-
-    // Configura o token de autenticação
+    // Token de autenticação em todas as requisições
     $.ajaxSetup({
         headers: {
-            'Authorization': 'Bearer ' + localStorage.getItem('token')
-        }
+            Authorization: 'Bearer ' + localStorage.getItem('token'),
+        },
     });
 
+    // ========================
+    // Carrega colunas + tasks
+    // ========================
     function loadBoard() {
-        $.get(`/api/boards/${boardId}/columns`, function(columns) {
+        $.get(`/api/boards/${boardId}/columns`, (columns) => {
             $('#kanbanBoard').empty();
 
-            columns.forEach(function(column) {
+            columns.forEach((column) => {
                 let columnHtml = `
                     <div class="kanban-column">
                         <div class="kanban-column-header">${column.name}</div>
                         <div class="kanban-tasks">
                 `;
 
-                column.tasks.forEach(function(task) {
+                column.tasks.forEach((task) => {
                     columnHtml += `
                         <div class="kanban-task">
-                            <strong>${task.title}</strong><br>
-                            ${task.description || ''}
+                            <strong>${task.title}</strong>
+                            <span>${task.description ?? ''}</span>
                         </div>
                     `;
                 });
 
                 columnHtml += `
-                        </div> <!-- Fim das tasks -->
-                    </div> <!-- Fim da coluna -->
+                        </div> <!-- /kanban-tasks -->
+                    </div> <!-- /kanban-column -->
                 `;
 
                 $('#kanbanBoard').append(columnHtml);
             });
-        }).fail(function(xhr) {
-            alert('Erro ao carregar o board: ' + (xhr.responseJSON?.message || 'Erro desconhecido'));
+        }).fail((xhr) => {
+            alert(
+                'Erro ao carregar o board: ' +
+                    (xhr.responseJSON?.message || 'Erro desconhecido')
+            );
             if (xhr.status === 401) window.location.href = '/login';
         });
     }

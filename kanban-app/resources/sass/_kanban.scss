@@ -1,18 +1,19 @@
+/* Container com flex horizontal e gap */
 .kanban-board {
-    display: flex;                // ✅ Essencial para as colunas ficarem lado a lado
-    flex-direction: row;           // ✅ Horizontal
+    display: flex;
     gap: 1rem;
-    overflow-x: auto;              // ✅ Scroll horizontal se faltar espaço
-    padding-bottom: 1rem;
-    padding-top: 1rem;
+    overflow-x: auto;
+    padding: 1rem 0;
     max-width: 100%;
 }
 
+/* Coluna menor (≈ 19 % da largura da viewport) */
 .kanban-column {
     background-color: #2c2c2c;
     padding: 1rem;
     border-radius: 1rem;
-    min-width: 250px;
+    width: 19vw;           /* 5 colunas ≈ 95 vw com o gap */
+    min-width: 180px;      /* garante legibilidade em telas menores */
     max-height: 80vh;
     overflow-y: auto;
     display: flex;
@@ -21,30 +22,70 @@
     box-shadow: 0 4px 10px rgba(0,0,0,0.4);
 }
 
+/* Cabeçalho fixo */
 .kanban-column-header {
     position: sticky;
     top: 0;
     background-color: $primary-blue;
     color: $white;
     font-weight: bold;
-    margin-bottom: 1rem;
     text-align: center;
-    padding: 0.5rem;
+    padding: 0.6rem;
     border-radius: 0.5rem;
+    margin-bottom: 1.25rem;
     z-index: 1;
+    font-size: 0.9rem;
 }
 
+/* Card da task — texto truncado */
 .kanban-task {
+    position: relative;
     background-color: #ffffff;
     color: #000;
     border-radius: 0.5rem;
-    padding: 0.75rem;
+    padding: 0.6rem 0.7rem;
     margin-bottom: 0.5rem;
     box-shadow: 0 2px 6px rgba(0,0,0,0.2);
     transition: transform 0.2s, box-shadow 0.2s;
 
+    cursor: grab;
+
     &:hover {
         transform: translateY(-3px);
         box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background-color: $primary-blue;
+        border-top-left-radius: 0.5rem;
+        border-top-right-radius: 0.5rem;
+    }
+
+    /* título curto + elipse se ultrapassar 1 linha */
+    strong {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: 0.85rem;
+    }
+
+    /* descrição opcional – 2 linhas com elipse */
+    span,
+    p {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: 0.75rem;
+        margin: 0;
     }
 }
