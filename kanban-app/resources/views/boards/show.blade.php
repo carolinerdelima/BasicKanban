@@ -18,12 +18,12 @@
 
     <meta name="board-id" content="{{ $boardId }}">
 
-    <div class="page-title mb-3 text-center">
+    <div class="page-title text-center mb-3">
         <img src="{{ asset('images/kanban-icon.png') }}" alt="Kanban Icon">
         Kanban App - Board #{{ $boardId }}
     </div>
 
-    <div class="text-center mb-3">
+    <div class="text-center mb-4">
         <button id="createTaskButton" class="primary-action-button">
             <i class="fas fa-plus-circle"></i> Criar Nova Task
         </button>
@@ -33,19 +33,20 @@
         <div id="taskModalContent">
             <h4 class="mb-3">Criação de Task</h4>
 
-            <input type="text"
-                    id="taskTitle"
+            <input  id="taskTitle"
+                    type="text"
                     class="form-control mb-2"
-                    placeholder="Título da Task">
+                    placeholder="Título da task">
 
             <textarea id="taskDescription"
                         class="form-control mb-3"
                         placeholder="Descrição (opcional)"
                         rows="3"></textarea>
 
-            <button id="saveTask"   class="btn btn-primary w-100 mb-2">Salvar</button>
+            <button id="saveTask"      class="btn btn-primary w-100 mb-2">Salvar</button>
             <button id="closeTaskModal" class="btn btn-secondary w-100">Cancelar</button>
         </div>
     </div>
+
     <div id="kanbanBoard" class="kanban-board"></div>
 @endsection
