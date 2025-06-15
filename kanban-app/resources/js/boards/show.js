@@ -34,8 +34,8 @@ $(document).ready(() => {
     }
 
     function handleDrop(evt) {
-        const $item    = $(evt.item);
-        const taskId   = $item.data('id');
+        const $item     = $(evt.item);
+        const taskId    = $item.data('id');
         const newColumn = $(evt.to).closest('.kanban-column').data('id');
         const newIndex  = evt.newIndex + 1;
 
@@ -43,9 +43,17 @@ $(document).ready(() => {
             url: `/api/tasks/${taskId}/move`,
             method: 'PATCH',
             contentType: 'application/json',
-            data: JSON.stringify({ column_id: newColumn, position: newIndex })
-        }).fail((xhr) => {
-            alert('Falha ao mover a task: ' + (xhr.responseJSON?.message || 'erro'));
+            data: JSON.stringify({
+                column_id: newColumn,
+                position:  newIndex
+            })
+        })
+        .done(() => {
+            loadBoard();
+        })
+        .fail(xhr => {
+            alert('Falha ao mover a task: ' +
+                (xhr.responseJSON?.message || 'erro'));
             loadBoard();
         });
     }
