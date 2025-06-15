@@ -97,3 +97,67 @@
     font-size: 2.1rem;
     margin-bottom: .6rem;
 }
+
+.primary-action-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .4rem;
+
+    margin: 0 auto;
+    padding: .55rem 1.8rem;
+
+    font-weight: 700;
+    color: $white;
+    background: transparent;
+    border: 2px solid $white;
+    border-radius: 2rem;
+    transition: all .25s;
+
+    i { font-size: 1rem; }
+
+    &:hover {
+        background: #ffffff;
+        color: $primary-blue;
+    }
+}
+
+#taskModalOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+#taskModalContent {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 1rem;
+    width: 320px;
+    text-align: center;
+
+    h4 { color:#27262A; }
+
+    input, textarea {
+        width: 100%;
+        margin-bottom: 1rem;
+        padding: .55rem;
+        border: 1px solid #ccc;
+        border-radius: .5rem;
+        font-size: .9rem;
+    }
+
+    textarea { resize: none; height: 90px; }
+
+    button {
+        border-radius: 2rem;
+        font-weight: 700;
+    }
+}
+
+.text-center {
+    margin-bottom: 0.3 !important;
+}
