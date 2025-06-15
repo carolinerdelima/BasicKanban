@@ -2,36 +2,33 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
 use App\Models\Board;
 use Illuminate\Http\Request;
+use App\Services\BoardService;
+use App\Http\Controllers\Controller;
 
 class BoardController extends Controller
 {
+    public function __construct(private BoardService $service) {}
+
     /**
      * Lista todos os boards onde o usuário é membro
      */
     public function index(Request $request)
     {
-        return $request->user()->boards()->get();
+        return $this->service->getBoardsForUser($request->user());
     }
 
     /**
-     * Cria um novo board e adicionar o usuário como membro automaticamente
+     * Cria um novo board e adiciona o usuário como membro automaticamente
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
         ]);
 
-        $board = Board::create([
-            'name' => $request->name,
-            'user_id' => $request->user()->id, // Usuário que criou (dono)
-        ]);
-
-        // Adiciona o criador como membro automaticamente
-        $board->users()->attach($request->user()->id);
+        $board = $this->service->createBoard($request->user(), $validated);
 
         return response()->json($board, 201);
     }
@@ -41,10 +38,7 @@ class BoardController extends Controller
      */
     public function show(Request $request, Board $board)
     {
-        // Verifica se o usuário é membro do board
-        if (!$request->user()->boards()->where('boards.id', $board->id)->exists()) {
-            return response()->json(['message' => 'Acesso negado ao board.'], 403);
-        }
+        $board = $this->service->showBoard($request->user(), $board);
 
         return response()->json($board);
     }
