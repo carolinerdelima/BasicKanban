@@ -2,6 +2,12 @@ import $ from 'jquery';
 import { loadUserName, setupLogoutButton } from '../helpers/userInfo';
 
 $(document).ready(function() {
+
+    $(document).on('click', '.board-item', function() {
+        const boardId = $(this).data('id');
+        window.location.href = `/boards/${boardId}`;
+    });
+
     if (!window.location.pathname.startsWith('/boards')) return;
 
     loadUserName();

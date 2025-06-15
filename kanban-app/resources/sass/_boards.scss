@@ -19,6 +19,7 @@
     border-radius: $border-radius;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
     transition: all 0.3s ease;
+    cursor: pointer;
 
     a {
         color: $white;
@@ -28,6 +29,7 @@
     }
 
     &:hover {
+        background-color: darken($primary-blue, 10%);
         transform: translateY(-5px);
         box-shadow: 0 6px 14px rgba(33, 114, 184, 0.6);
     }
